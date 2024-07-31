@@ -18,10 +18,10 @@ public interface CardService {
 
     /**
      *
-     * @param cardsDto - CardDto Object
+     * @param cardDto - CardDto Object
      * @return boolean indicating if the update of card details is successful or not
      */
-    boolean updateCard(CardDto cardsDto);
+    boolean updateCard(CardDto cardDto);
 
     /**
      *

@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="account-service" />
         <module name="card-service" />
+        <module name="loan-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -15,6 +16,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="account-service" options="-parameters" />
       <module name="card-service" options="-parameters" />
+      <module name="loan-service" options="-parameters" />
     </option>
   </component>
 </project>

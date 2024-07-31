@@ -21,7 +21,7 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
-    private final AccountRepository accountsRepository;
+    private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
 
     /**
@@ -36,7 +36,7 @@ public class AccountServiceImpl implements AccountService {
                     +customerDto.getMobileNumber());
         }
         Customer savedCustomer = customerRepository.save(customer);
-        accountsRepository.save(createNewAccount(savedCustomer));
+        accountRepository.save(createNewAccount(savedCustomer));
     }
 
     /**
@@ -63,11 +63,11 @@ public class AccountServiceImpl implements AccountService {
         Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
                 () -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
         );
-        Account accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
+        Account account = accountRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
                 () -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString())
         );
         CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
-        customerDto.setAccountDto(AccountMapper.mapToAccountDto(accounts, new AccountDto()));
+        customerDto.setAccountDto(AccountMapper.mapToAccountDto(account, new AccountDto()));
         return customerDto;
     }
 
@@ -80,13 +80,13 @@ public class AccountServiceImpl implements AccountService {
         boolean isUpdated = false;
         AccountDto accountDto = customerDto.getAccountDto();
         if(accountDto !=null ){
-            Account accounts = accountsRepository.findById(accountDto.getAccountNumber()).orElseThrow(
+            Account account = accountRepository.findById(accountDto.getAccountNumber()).orElseThrow(
                     () -> new ResourceNotFoundException("Account", "AccountNumber", accountDto.getAccountNumber().toString())
             );
-            AccountMapper.mapToAccount(accountDto, accounts);
-            accounts = accountsRepository.save(accounts);
+            AccountMapper.mapToAccount(accountDto, account);
+            account = accountRepository.save(account);
 
-            Long customerId = accounts.getCustomerId();
+            Long customerId = account.getCustomerId();
             Customer customer = customerRepository.findById(customerId).orElseThrow(
                     () -> new ResourceNotFoundException("Customer", "CustomerID", customerId.toString())
             );
@@ -106,7 +106,7 @@ public class AccountServiceImpl implements AccountService {
         Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
                 () -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
         );
-        accountsRepository.deleteByCustomerId(customer.getCustomerId());
+        accountRepository.deleteByCustomerId(customer.getCustomerId());
         customerRepository.deleteById(customer.getCustomerId());
         return true;
     }

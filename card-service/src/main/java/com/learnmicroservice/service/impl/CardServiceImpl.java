@@ -24,8 +24,8 @@ public class CardServiceImpl implements CardService {
      */
     @Override
     public void createCard(String mobileNumber) {
-        Optional<Card> optionalCards= cardRepository.findByMobileNumber(mobileNumber);
-        if(optionalCards.isPresent()){
+        Optional<Card> optionalCard= cardRepository.findByMobileNumber(mobileNumber);
+        if(optionalCard.isPresent()){
             throw new CardAlreadyExistsException("Card already registered with given mobileNumber "+mobileNumber);
         }
         cardRepository.save(createNewCard(mobileNumber));
@@ -54,23 +54,23 @@ public class CardServiceImpl implements CardService {
      */
     @Override
     public CardDto fetchCard(String mobileNumber) {
-        Card cards = cardRepository.findByMobileNumber(mobileNumber).orElseThrow(
+        Card card = cardRepository.findByMobileNumber(mobileNumber).orElseThrow(
                 () -> new ResourceNotFoundException("Card", "mobileNumber", mobileNumber)
         );
-        return CardMapper.mapToCardDto(cards, new CardDto());
+        return CardMapper.mapToCardDto(card, new CardDto());
     }
 
     /**
      *
-     * @param cardsDto - CardDto Object
+     * @param cardDto - CardDto Object
      * @return boolean indicating if the update of card details is successful or not
      */
     @Override
-    public boolean updateCard(CardDto cardsDto) {
-        Card cards = cardRepository.findByCardNumber(cardsDto.getCardNumber()).orElseThrow(
-                () -> new ResourceNotFoundException("Card", "CardNumber", cardsDto.getCardNumber()));
-        CardMapper.mapToCard(cardsDto, cards);
-        cardRepository.save(cards);
+    public boolean updateCard(CardDto cardDto) {
+        Card card = cardRepository.findByCardNumber(cardDto.getCardNumber()).orElseThrow(
+                () -> new ResourceNotFoundException("Card", "CardNumber", cardDto.getCardNumber()));
+        CardMapper.mapToCard(cardDto, card);
+        cardRepository.save(card);
         return  true;
     }
 
@@ -80,10 +80,10 @@ public class CardServiceImpl implements CardService {
      */
     @Override
     public boolean deleteCard(String mobileNumber) {
-        Card cards = cardRepository.findByMobileNumber(mobileNumber).orElseThrow(
+        Card card = cardRepository.findByMobileNumber(mobileNumber).orElseThrow(
                 () -> new ResourceNotFoundException("Card", "mobileNumber", mobileNumber)
         );
-        cardRepository.deleteById(cards.getCardId());
+        cardRepository.deleteById(card.getCardId());
         return true;
     }
 
