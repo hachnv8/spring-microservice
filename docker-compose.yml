@@ -1,0 +1,37 @@
+services:
+  accounts:
+    image: "hachnv/account-service:s4.1"
+    container_name: account-ms
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - hachnv
+  loans:
+    image: "hachnv/loan-service:s4.1"
+    container_name: loan-ms
+    ports:
+      - "8090:8090"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - hachnv
+  cards:
+    image: "hachnv/card-service:s4.1"
+    container_name: card-ms
+    ports:
+      - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - hachnv
+networks:
+  hachnv:
+    driver: "bridge"
