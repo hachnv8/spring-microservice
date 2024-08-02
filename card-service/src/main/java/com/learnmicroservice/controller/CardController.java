@@ -1,12 +1,15 @@
 package com.learnmicroservice.controller;
 
 import com.learnmicroservice.constant.CardConstant;
+import com.learnmicroservice.dto.CardContactInfoDto;
 import com.learnmicroservice.dto.CardDto;
 import com.learnmicroservice.dto.ResponseDto;
 import com.learnmicroservice.service.impl.CardServiceImpl;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,12 @@ import org.springframework.web.bind.annotation.*;
 public class CardController {
 
     private final CardServiceImpl cardService;
+    @Value("${build.version}")
+    private String buildVersion;
+
+    private final Environment environment;
+
+    private final CardContactInfoDto cardContactInfoDto;
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createCard(
@@ -72,6 +81,22 @@ public class CardController {
                     .status(HttpStatus.EXPECTATION_FAILED)
                     .body(new ResponseDto(CardConstant.STATUS_417, CardConstant.MESSAGE_417_DELETE));
         }
+    }
+
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getBuildInfo() {
+        return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+    }
+
+    @GetMapping("/java-version")
+    public ResponseEntity<String> getJavaVersion() {
+        return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
+    }
+
+    @GetMapping("/contact-info")
+    public ResponseEntity<CardContactInfoDto> getContactInfo() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(cardContactInfoDto);
     }
 
 }

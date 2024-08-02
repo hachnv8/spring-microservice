@@ -1,6 +1,7 @@
 package com.learnmicroservice.controller;
 
 import com.learnmicroservice.constant.AccountConstant;
+import com.learnmicroservice.dto.AccountContactInfoDto;
 import com.learnmicroservice.dto.CustomerDto;
 import com.learnmicroservice.dto.ResponseDto;
 import com.learnmicroservice.service.impl.AccountServiceImpl;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,10 @@ public class AccountController {
     private final AccountServiceImpl accountService;
     @Value("${build.version}")
     private String buildVersion;
+
+    private final Environment environment;
+
+    private final AccountContactInfoDto accountContactInfoDto;
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) {
@@ -75,5 +81,16 @@ public class AccountController {
     @GetMapping("/build-info")
     public ResponseEntity<String> getBuildInfo() {
         return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+    }
+
+    @GetMapping("/java-version")
+    public ResponseEntity<String> getJavaVersion() {
+        return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
+    }
+
+    @GetMapping("/contact-info")
+    public ResponseEntity<AccountContactInfoDto> getContactInfo() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(accountContactInfoDto);
     }
 }

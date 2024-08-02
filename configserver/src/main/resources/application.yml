@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: configserver
+  profiles:
+    active: git
+  #    active: native
+  cloud:
+    config:
+      server:
+        git:
+          uri: "https://github.com/hachnv8/spring-microservice-config.git"
+          default-label: master
+          timeout: 5
+          clone-on-start: true
+          force-pull: true
+#        native:
+#          search-locations: "classpath:/config"
+
+server:
+  port: 8071
+encrypt:
+  key: "72E948DEFF581A1AE24B7FEB588A5"
